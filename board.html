@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NEONEEDS LP｜設計意図ボード</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="NEONEEDS LP｜設計意図ボード">
+<meta property="og:description" content="LPの各パートの狙い・根拠をまとめた設計ボード。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://x85-131-252-8.static.xvps.ne.jp/neoneeds/board.html">
+<meta property="og:image" content="https://x85-131-252-8.static.xvps.ne.jp/neoneeds/og-board.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://x85-131-252-8.static.xvps.ne.jp/neoneeds/og-board.jpg">
+<link rel="apple-touch-icon" href="https://x85-131-252-8.static.xvps.ne.jp/neoneeds/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho+JP:wght@600;700&family=Lora:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --board:#f3f1ea; --ink:#26241f; --sub:#6f6b62; --line:#c9a86a; --card:#fffdf8;
+  --serif:"Shippori Mincho JP",serif; --sans:"Noto Sans JP",sans-serif; --lora:"Lora",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:var(--board);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+
+.stage{position:fixed;inset:0;overflow:hidden;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.stage.grabbing{cursor:grabbing}
+.world{position:absolute;top:0;left:0;transform-origin:0 0;width:1240px;
+  background:var(--board);background-image:radial-gradient(#dcd6c6 1.1px,transparent 1.1px);background-size:26px 26px;
+  padding-bottom:40px;box-shadow:0 0 0 1px #e2ddd0}
+
+.concept{padding:26px 40px 6px}
+.concept .box{background:#1a1814;color:#ece6d8;border-radius:14px;padding:18px 24px;position:relative;overflow:hidden;max-width:900px;margin:0 auto}
+.concept .box::before{content:"CONCEPT";position:absolute;top:12px;right:18px;font-family:var(--lora);letter-spacing:.3em;font-size:11px;color:#c9a86a;opacity:.7}
+.concept h2{font-family:var(--serif);font-size:15px;margin-bottom:8px;color:#f3ead4}
+.concept p{font-size:12.5px;line-height:1.95;color:#c9c3b5}
+.concept .tag{display:inline-block;margin:8px 6px 0 0;font-size:11px;color:#1a1814;background:#c9a86a;border-radius:20px;padding:3px 11px}
+
+.canvas{position:relative;width:1240px;height:3660px;margin:0 auto}
+svg.wires{position:absolute;inset:0;width:1240px;height:3660px;pointer-events:none;z-index:1}
+svg.wires path{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:2 5;stroke-linecap:round;opacity:.85}
+.device{position:absolute;left:462px;top:140px;width:316px;background:#111;border-radius:30px;padding:8px;box-shadow:0 34px 66px rgba(40,34,20,.24);z-index:2}
+.device img{width:300px;display:block;border-radius:22px}
+.pin{position:absolute;z-index:5;width:27px;height:27px;border-radius:50%;background:var(--line);color:#1a1408;font-family:var(--lora);font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(40,34,20,.28);border:2px solid #fffdf8}
+.note{position:absolute;width:400px;background:var(--card);border:1px solid #e6dfce;border-radius:14px;padding:16px 18px;box-shadow:0 10px 26px rgba(40,34,20,.1);z-index:3}
+.note .h{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.note .n{flex:none;width:23px;height:23px;border-radius:50%;background:#1a1814;color:#e9d29a;font-family:var(--lora);font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center}
+.note .h h3{font-family:var(--serif);font-size:14.5px;font-weight:700;letter-spacing:.02em}
+.note ul{list-style:none;display:grid;gap:6px}
+.note li{font-size:12.5px;line-height:1.75;color:#403c34;padding-left:15px;position:relative}
+.note li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:6px;border-radius:50%;background:var(--line)}
+.note .copy{font-family:var(--serif);font-size:13px;color:#7a5f28;background:#faf3e2;border-left:3px solid var(--line);padding:6px 10px;border-radius:0 6px 6px 0;margin-bottom:10px}
+
+.hud-top{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;padding:12px 18px;background:linear-gradient(#f3f1eaf2,#f3f1ea00);pointer-events:none}
+.hud-top .brand{font-family:var(--lora);font-size:17px;letter-spacing:.26em;color:#1c1a16}
+.hud-top .brand img{height:15px;width:auto;display:block}
+.hud-top h1{font-family:var(--serif);font-size:14px;font-weight:700}
+.hud-top .sub{font-size:11px;color:var(--sub)}
+.hud-hint{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:50;font-size:11px;color:#7a756a;background:#fffdf8cc;border:1px solid #e2ddd0;border-radius:20px;padding:7px 14px;pointer-events:none;backdrop-filter:blur(4px)}
+.hud-zoom{position:fixed;right:15px;bottom:15px;z-index:50;display:flex;flex-direction:column;gap:8px}
+.hud-zoom button{width:44px;height:44px;border-radius:50%;border:1px solid #ddd7c9;background:#fffdf8;color:#26241f;font-size:20px;line-height:1;cursor:pointer;box-shadow:0 4px 12px rgba(40,34,20,.14);display:flex;align-items:center;justify-content:center}
+.hud-zoom button:active{background:#efe9db}
+.hud-zoom .fit{font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="hud-top">
+  <span class="brand"><img src="logo-black.png" alt="NEO NEEDS"></span>
+  <h1>LP 設計意図ボード</h1>
+  <span class="sub">各パートの狙い・根拠</span>
+</div>
+
+<div class="stage" id="stage">
+  <div class="world" id="world">
+    <div class="concept">
+      <div class="box">
+        <h2>全体設計の考え方</h2>
+        <p>黒基調のモノクロ ＋ シャンパンの差し色 ＋ フィルムグレインで、"AIっぽい量産テンプレ感"を排除し、ReFa のような静かな高級感に。ほぼスマホ流入を前提に、縦の余白を圧縮し、セクション番号を見出しの左へ。読ませない層でも"見るだけで要点が入る"構成にしています。</p>
+        <span class="tag">黒基調 × 高級感</span><span class="tag">スマホ最適化</span><span class="tag">実物で証明</span><span class="tag">LINE無料診断へ一直線</span>
+      </div>
+    </div>
+
+    <div class="canvas">
+      <svg class="wires" viewBox="0 0 1240 3660">
+        <path d="M770 178 L 808 178"/>
+        <path d="M470 732 L 432 732"/>
+        <path d="M770 927 L 808 927"/>
+        <path d="M470 1408 L 432 1408"/>
+        <path d="M770 1843 L 808 1843"/>
+        <path d="M470 2250 L 432 2250"/>
+        <path d="M770 2671 L 808 2671"/>
+        <path d="M470 2959 L 432 2959"/>
+        <path d="M770 3310 L 808 3310"/>
+      </svg>
+
+      <div class="device"><img src="lp-full.png" alt="NEONEEDS LP 全体"></div>
+
+      <div class="pin" style="left:757px;top:165px">1</div>
+      <div class="pin" style="left:457px;top:719px">2</div>
+      <div class="pin" style="left:757px;top:914px">3</div>
+      <div class="pin" style="left:457px;top:1395px">4</div>
+      <div class="pin" style="left:757px;top:1830px">5</div>
+      <div class="pin" style="left:457px;top:2237px">6</div>
+      <div class="pin" style="left:757px;top:2658px">7</div>
+      <div class="pin" style="left:457px;top:2945px">8</div>
+      <div class="pin" style="left:757px;top:3296px">9</div>
+
+      <!-- 右側の注釈 -->
+      <div class="note" style="left:810px;top:150px">
+        <div class="h"><span class="n">1</span><h3>ヒーロー（動画 × キャッチコピー）</h3></div>
+        <div class="copy">「その影響力を、Brandに。」</div>
+        <ul>
+          <li>夜職の"影響力＝資産"という価値観に一言で直結。読まない層でも1秒で自分ごと化。</li>
+          <li>背景は夜の街の実写動画。文字だけの"設計図感"を消し、冒頭で世界観と本物感を提示。</li>
+          <li>「Brand」を英字にして高級感を演出。</li>
+        </ul>
+      </div>
+      <div class="note" style="left:810px;top:899px">
+        <div class="h"><span class="n">3</span><h3>ご支援する方々（実績・権威）</h3></div>
+        <ul>
+          <li>社会的証明を"冒頭付近"に配置。まず「誰がやっているか」を見せて信頼を先出し。</li>
+          <li>愛のハイエナ／歌舞伎超TV 出演者で「格」を担保。見栄を気にする層に効く。</li>
+        </ul>
+      </div>
+      <div class="note" style="left:810px;top:1815px">
+        <div class="h"><span class="n">5</span><h3>選ばれる理由（差別化）</h3></div>
+        <ul>
+          <li>「ナイト特化／安売りしない＝格／本格制作まで」を短い言葉で提示。</li>
+          <li>重要語を金色＋下線アニメにして、"読まずに要点が入る"設計。</li>
+        </ul>
+      </div>
+      <div class="note" style="left:810px;top:2643px">
+        <div class="h"><span class="n">7</span><h3>FAQ</h3></div>
+        <ul><li>「未経験でも大丈夫」「撮影はこちら対応」「相談だけでもOK」など、最後の不安を先回りで解消し、LINE登録への心理的ハードルを下げる。</li></ul>
+      </div>
+      <div class="note" style="left:810px;top:3282px">
+        <div class="h"><span class="n">9</span><h3>フッター（信頼の担保）</h3></div>
+        <ul><li>運営会社・プライバシーポリシー・公式Instagram を掲載し、"ちゃんとした事業者"の安心感を担保。</li></ul>
+      </div>
+
+      <!-- 左側の注釈 -->
+      <div class="note" style="left:30px;top:704px">
+        <div class="h"><span class="n">2</span><h3>リード文</h3></div>
+        <div class="copy">「フォロワーは指名に、再生数は単価になる。」</div>
+        <ul><li>SNSの数字を"指名・単価"という夜職のお金の言葉に翻訳。価値を相手の利益で語る。</li></ul>
+      </div>
+      <div class="note" style="left:30px;top:1380px">
+        <div class="h"><span class="n">4</span><h3>実際の投稿（スマホ枠 × 再生数）</h3></div>
+        <ul>
+          <li>実績を言葉でなく"実物"で証明。スマホモックアップ＋自動再生で本物のリールを体感。</li>
+          <li>再生数の多い順に並べ、最初に200万をぶつけてインパクト最大化。</li>
+          <li>再生数は金色のセリフ体バッジで高級感を統一。</li>
+        </ul>
+      </div>
+      <div class="note" style="left:30px;top:2222px">
+        <div class="h"><span class="n">6</span><h3>無料診断の流れ</h3></div>
+        <ul><li>3ステップ＋線が伸びるアニメで「簡単・すぐ」を体感させ、行動のハードルを下げる。</li></ul>
+      </div>
+      <div class="note" style="left:30px;top:2931px">
+        <div class="h"><span class="n">8</span><h3>最終CTA（LINEで無料診断）</h3></div>
+        <ul>
+          <li>締めは中央寄せの大見出しで一点集中。</li>
+          <li>ボタンは高級ブランド流（シャープな角・細い二重フレーム・広い字間）で安っぽさを排除。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hud-hint" id="hint">2本指でズーム／ドラッグで移動（PCはホイールでズーム）</div>
+<div class="hud-zoom">
+  <button id="zin" aria-label="拡大">＋</button>
+  <button id="zout" aria-label="縮小">−</button>
+  <button id="zfit" class="fit" aria-label="全体表示">⤢</button>
+</div>
+
+<script>
+(function(){
+  const stage=document.getElementById('stage'), world=document.getElementById('world');
+  let scale=1, tx=0, ty=0;
+  const MIN=0.04, MAX=14;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  function apply(){ world.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')'; }
+  function worldSize(){ return {w:world.offsetWidth, h:world.offsetHeight}; }
+  function fit(){
+    const vw=stage.clientWidth, vh=stage.clientHeight, ws=worldSize();
+    const pad = vw<600 ? 0.99 : 0.94;
+    scale=clamp(Math.min(vw/ws.w, vh/ws.h)*pad, MIN, MAX);
+    tx=(vw-ws.w*scale)/2; ty=(vh-ws.h*scale)/2;
+    apply();
+  }
+  function zoomAt(cx,cy,factor){
+    const r=stage.getBoundingClientRect(), x=cx-r.left, y=cy-r.top;
+    const ns=clamp(scale*factor, MIN, MAX), k=ns/scale;
+    tx = x-(x-tx)*k; ty = y-(y-ty)*k; scale=ns; apply();
+  }
+  stage.addEventListener('wheel',e=>{ e.preventDefault(); zoomAt(e.clientX,e.clientY, Math.exp(-e.deltaY*0.0016)); },{passive:false});
+  const pts=new Map(); let dragging=false,sx=0,sy=0,stx=0,sty=0,lastDist=0,lastMid=null;
+  stage.addEventListener('pointerdown',e=>{ stage.setPointerCapture(e.pointerId); pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===1){ dragging=true; stage.classList.add('grabbing'); sx=e.clientX; sy=e.clientY; stx=tx; sty=ty; }
+    else { dragging=false; lastDist=0; lastMid=null; }
+  });
+  stage.addEventListener('pointermove',e=>{
+    if(!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size>=2){
+      const a=[...pts.values()], d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y), mid={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2};
+      if(lastDist){ zoomAt(mid.x,mid.y, d/lastDist); if(lastMid){ tx+=mid.x-lastMid.x; ty+=mid.y-lastMid.y; apply(); } }
+      lastDist=d; lastMid=mid;
+    } else if(dragging){ tx=stx+(e.clientX-sx); ty=sty+(e.clientY-sy); apply(); }
+  });
+  function up(e){ pts.delete(e.pointerId); if(pts.size<2){ lastDist=0; lastMid=null; } if(pts.size===0){ dragging=false; stage.classList.remove('grabbing'); } }
+  stage.addEventListener('pointerup',up); stage.addEventListener('pointercancel',up);
+  const L=()=>stage.getBoundingClientRect().left, T=()=>stage.getBoundingClientRect().top;
+  document.getElementById('zin').onclick=()=>zoomAt(L()+stage.clientWidth/2, T()+stage.clientHeight/2, 1.3);
+  document.getElementById('zout').onclick=()=>zoomAt(L()+stage.clientWidth/2, T()+stage.clientHeight/2, 1/1.3);
+  document.getElementById('zfit').onclick=fit;
+  addEventListener('resize',fit);
+  const img=world.querySelector('.device img');
+  if(img && !img.complete){ img.addEventListener('load',fit); }
+  fit(); setTimeout(fit,300);
+  setTimeout(()=>{const h=document.getElementById('hint'); if(h){h.style.transition='opacity .6s'; h.style.opacity='0';}},4500);
+})();
+</script>
+</body>
+</html>

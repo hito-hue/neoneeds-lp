@@ -1,0 +1,17 @@
+# Netlifyのローカル設定
+.netlify
+
+# 社内用・非公開ファイル（サーバー情報や作業用データ）
+復元方法.txt
+_old_2026-07-22/
+元写真/
+_plan.png
+_v.png
+lp-full.png
+.DS_Store
+
+# 社内メモ（文言指示・作業メモ）
+NEONEEDS_LP_文言一覧.txt
+NEONEEDS_LP_文言一覧_修正版.txt
+neoneeds-lp-text.txt
+メンバー一覧_2026-07-14修正版.txt
