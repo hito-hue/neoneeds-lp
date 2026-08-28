@@ -28,6 +28,24 @@
       }, (s = e.createElement(c)).async = 1, s.src = "https://www.clarity.ms/tag/xir48tpjs2", (a = e.getElementsByTagName(c)[0]).parentNode.insertBefore(s, a)
     }(window, document, "clarity", "script")
   </script>
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1783700796243666');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1783700796243666&ev=PageView&noscript=1"
+    alt=""
+  ></noscript>
+  <!-- End Meta Pixel Code -->
   <style>
     :root {
       --bg: #0a0a0a;
@@ -1723,6 +1741,14 @@
           e.classList.toggle("hot", !(!t.target.closest || !t.target.closest("a,button,summary,.tile,.phone")))
         }), addEventListener("mousedown", () => e.classList.add("down")), addEventListener("mouseup", () => e.classList.remove("down"))
       }()
+  </script>
+  <script>
+    document.addEventListener('click', function(event) {
+      const lineLink = event.target.closest('a[href*="line.me"]');
+      if (lineLink && typeof fbq === 'function') {
+        fbq('track', 'Contact', { content_name: 'LINE無料診断' });
+      }
+    });
   </script>
 </body>
 
